@@ -1,0 +1,38 @@
+GlitchHead — plugin VST3 / AU / Standalone · By Sampled Head
+=============================================================
+
+INSTALAR
+- Windows: copia la carpeta  VST3/GlitchHead.vst3  a
+      C:\Program Files\Common Files\VST3\
+  La app independiente (sin DAW) es  Standalone/GlitchHead.exe
+  Si Windows avisa («Windows protegió su PC»): Más información → Ejecutar de todas formas.
+- Mac: copia  VST3/GlitchHead.vst3  a  /Library/Audio/Plug-Ins/VST3/
+       y  AU/GlitchHead.component  a  /Library/Audio/Plug-Ins/Components/
+  La app independiente es  Standalone/GlitchHead.app
+  Funciona en Intel y Apple Silicon, desde macOS 10.13 (también en Monterey).
+  Si macOS dice que está dañado o no se abre, en Terminal:
+      xattr -cr "/Library/Audio/Plug-Ins/VST3/GlitchHead.vst3"
+      xattr -cr "/Library/Audio/Plug-Ins/Components/GlitchHead.component"
+Abre de nuevo el DAW para que lo detecte.
+
+USAR
+Tres efectos en cadena; enciende los que quieras y cámbialos de orden con las flechas < >.
+- SHRED: corta el audio en cada cruce por cero (wavesets), los junta en «colecciones» y las vuelve a tocar
+  con probabilidades: Disorder (salta al pasado), Repeat/Freeze (repite), Absence (volumen o silencios
+  aleatorios), Dream (en cada colección, ¿proceso o fuente?). No sigue el tempo: depende del material.
+- HAZE: memoria corta que mezcla pasado y presente y la lee con granos: halos, sostenidos, drones.
+  Freeze congela la memoria. Temperature distorsiona y, a partir de la mitad, ensucia con ruido.
+- SPLIT: puerta partida. Lo que supera el umbral (Verge) va ARRIBA (filtro que se abre con la envolvente);
+  lo que queda debajo va ABAJO (inverso), con Drift (afinación inestable) y Melt (difuminado).
+  Para empezar: Vol de ABAJO a 0, ajusta Verge y Boost, y luego sube ABAJO.
+Pasa el ratón por cualquier mando: abajo aparece qué hace.
+«Candado»: al cambiar de preset se conservan Input, Mix y Output.
+Presets de fábrica en el desplegable; guarda los tuyos con «Guardar» (Documentos/GlitchHead/User Presets).
+
+PROBLEMAS
+Si algo falla, anota el DAW, el sistema y qué estabas haciendo, y avísanos.
+
+ACTUALIZACIONES
+Al abrir la ventana del plugin, como mucho una vez al día, se comprueba en GitHub si hay una versión nueva.
+Si la hay, aparece abajo una franja «Nueva versión… · Descargar». Descarga el zip y sustituye el .vst3 por el nuevo
+con el DAW cerrado. Con «✕» no vuelve a avisar de esa versión. Sin internet no aparece nada y el plugin funciona igual.

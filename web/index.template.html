@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GlitchHead · Shred · Haze · Split</title>
+<meta name="theme-color" content="#d9600b">
+<meta name="description" content="GlitchHead · Sampled Head: tres efectos salvajes en cadena. SHRED trocea en wavesets, HAZE crea texturas con memoria y SPLIT parte la señal con una puerta.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+:root{--bg:#17130f;--plate:#f3efe9;--plate2:#e8e2d9;--line:#d6cec2;--ink:#111;--ink2:#2b2622;--muted:#6f675e;--or:#d9600b;--orl:#ef7a22;--ord:#a94a07;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;--heavy:"Arial Black","Helvetica Neue",Impact,system-ui,sans-serif}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--plate);font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body{padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+  background:radial-gradient(circle at 50% -160px,var(--or) 0 330px,transparent 331px),radial-gradient(circle at 85% 40%,rgba(217,96,11,.07),transparent 40%),var(--bg);background-repeat:no-repeat}
+.wrap{max-width:1180px;margin:0 auto;padding:14px}
+header{display:flex;flex-direction:column;align-items:center;gap:8px;margin:6px 0 16px}
+.logo{display:flex;align-items:center;gap:14px}
+.logo svg.ico{width:64px;height:64px;flex:none;filter:drop-shadow(0 3px 0 rgba(0,0,0,.35))}
+.word{position:relative;display:inline-block;transform:rotate(-3deg)}
+.word b{font-family:var(--heavy);font-weight:900;font-size:46px;letter-spacing:-.02em;line-height:1;color:var(--ink);-webkit-text-stroke:3px var(--plate);paint-order:stroke fill;
+  text-shadow:5px 5px 0 var(--ink2),-2px -2px 0 var(--plate);font-style:italic;display:inline-block}
+.word b.cut{position:absolute;left:0;top:0;clip-path:inset(44% 0 44% 0);transform:translateX(6px);color:var(--plate);-webkit-text-stroke:3px var(--ink)}
+.tag{background:var(--ink);color:var(--plate);font-family:var(--heavy);font-size:11px;letter-spacing:.25em;text-transform:uppercase;padding:5px 10px;border-radius:3px;transform:rotate(1deg)}
+.card{background:var(--plate);color:var(--ink);border-radius:8px;padding:14px;margin-bottom:10px;position:relative;box-shadow:0 2px 0 var(--line) inset,0 6px 0 rgba(0,0,0,.35)}
+.card::before,.card::after{content:"";position:absolute;width:6px;height:6px;border-radius:50%;background:var(--ord);opacity:.7}
+.card::before{top:8px;left:8px}.card::after{bottom:8px;right:8px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn{background:var(--ink);color:var(--plate);border:0;border-radius:6px;padding:9px 13px;font:inherit;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;min-height:40px}
+.btn:hover{background:var(--ink2)}.btn.primary{background:var(--or);color:var(--ink)}.btn.primary:hover{background:var(--orl)}
+.btn.on{background:#c21a1a;color:#fff}.btn:disabled{opacity:.35;cursor:default}.btn.sm{padding:5px 10px;min-height:32px;font-size:13px}
+.seg{display:inline-flex;background:var(--ink);border-radius:6px;padding:3px;gap:3px}
+.seg button{background:transparent;border:0;color:var(--plate);padding:7px 12px;border-radius:4px;font:inherit;font-weight:800;cursor:pointer}
+.seg button.on{background:var(--or);color:var(--ink)}
+.muted{color:var(--muted)}.mono{font-family:var(--mono)}
+#wave{width:100%;height:130px;display:block;background:var(--ink);border-radius:6px;touch-action:none;cursor:pointer;border:3px solid var(--ink2)}
+.status{font-size:13px;color:var(--muted);min-height:18px}
+.bar{height:5px;background:var(--plate2);border-radius:4px;overflow:hidden;margin-top:6px}.bar>i{display:block;height:100%;width:0;background:var(--or)}
+.meter{width:110px;height:8px;background:var(--plate2);border-radius:4px;overflow:hidden}.meter>i{display:block;height:100%;width:0;background:var(--or)}
+.warn{color:#b3360a;font-weight:700}
+footer{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;opacity:.85;font-size:13px;padding:16px 0 30px}
+footer .btn{background:var(--plate);color:var(--ink)}
+.hidden{display:none!important}
+@media (max-width:520px){.word b{font-size:36px}.logo svg.ico{width:50px;height:50px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">
+      <svg class="ico" viewBox="0 0 64 64" aria-hidden="true">
+        <circle cx="32" cy="32" r="31" fill="#d9600b"/>
+        <g fill="#f3efe9"><rect x="18" y="7" width="28" height="8"/><rect x="22" y="16" width="28" height="8"/><rect x="15" y="25" width="28" height="8"/><rect x="18" y="43" width="28" height="9"/></g>
+        <rect x="23" y="34" width="28" height="8" fill="#111"/>
+        <g fill="#d9600b"><circle cx="22" cy="11" r="2"/><circle cx="28" cy="11" r="2"/><circle cx="35" cy="11" r="2"/><circle cx="41" cy="11" r="2"/>
+          <rect x="18" y="27" width="5" height="4"/><rect x="25" y="27" width="5" height="4"/><rect x="32" y="27" width="5" height="4"/>
+          <rect x="21" y="45" width="5" height="4"/><rect x="28" y="45" width="5" height="4"/><rect x="35" y="45" width="5" height="4"/></g>
+      </svg>
+      <div class="word"><b>GLITCHHEAD</b><b class="cut" aria-hidden="true">GLITCHHEAD</b></div>
+    </div>
+    <span class="tag">Shred · Haze · Split</span>
+  </header>
+
+  <section class="card">
+    <div class="row" style="justify-content:space-between">
+      <div class="row">
+        <label class="btn primary" for="file">📂 Subir audio</label>
+        <input type="file" id="file" accept="audio/*,video/*,.wav,.mp3,.m4a,.aac,.ogg,.flac,.webm,.mp4,.mov" class="hidden">
+        <button class="btn" id="recBtn">● Grabar</button>
+        <button class="btn" id="liveBtn" title="Procesa en directo lo que entra por el micro o la interfaz">🎙 En directo</button>
+        <button class="btn" id="demoBtn">Loop de prueba</button>
+      </div>
+      <div class="row"><div class="meter" id="meter"><i></i></div><span class="mono muted" id="recTime"></span></div>
+    </div>
+    <div class="status" id="srcInfo" style="margin-top:8px">Sube un loop, una toma o una canción, graba con el micro o usa el loop de prueba. Usa auriculares en «En directo».</div>
+  </section>
+
+  <section class="card">
+    <canvas id="wave"></canvas>
+    <div class="bar"><i id="prog"></i></div>
+    <div class="row" style="margin-top:10px;justify-content:space-between">
+      <div class="row">
+        <button class="btn primary" id="playBtn" disabled>▶ Reproducir</button>
+        <div class="seg" id="abSeg"><button data-v="proc" class="on">Procesado</button><button data-v="orig">Original</button></div>
+        <button class="btn sm" id="resetBtn" title="Vacía la memoria de los tres motores">⟲ Memoria</button>
+        <label class="row muted" style="gap:6px;font-size:13px"><input type="checkbox" id="loopChk" checked> Bucle</label>
+      </div>
+      <div class="row">
+        <label class="row muted" style="gap:6px;font-size:13px" title="Añade 2 s al final para que las colas (Sustain, Freeze, Haze) no se corten"><input type="checkbox" id="tailChk"> Cola 2 s</label>
+        <label class="row muted" style="gap:6px;font-size:13px" title="Si el pico supera 0 dBFS, se baja el volumen del archivo exportado"><input type="checkbox" id="safeChk" checked> Evitar saturación</label>
+        <button class="btn" id="dlBtn" disabled title="Procesa el archivo entero y lo descarga en WAV de 24 bits">⬇ WAV</button>
+        <button class="btn" id="outRecBtn" title="Graba lo que suena (procesado) mientras tocas o reproduces">⏺ Grabar salida</button>
+      </div>
+    </div>
+    <div class="status" id="status" style="margin-top:6px"></div>
+  </section>
+
+  <div id="ghPanel"></div>
+
+  <footer>
+    <span><b>GlitchHead</b> · <span class="mono" id="ver"></span> · Sampled Head · <a href="https://github.com/sampledhead-dot/GlitchHead/releases" style="color:var(--orl)" target="_blank" rel="noopener">Plugin VST3/AU</a></span>
+    <button class="btn sm" id="reportBtn">Descargar informe (.txt)</button>
+  </footer>
+</div>
+
+<script>/*__DSP__*/</script>
+<script>/*__UI__*/</script>
+<script>
+'use strict';
+const APP_VERSION = '1.0.0';
+document.getElementById('ver').textContent = 'v' + APP_VERSION;
+const $ = id => document.getElementById(id);
+
+/* ================== Informe de errores ================== */
+const LOG = [], STEPS = [];
+let lastError = null, lastPartial = null, currentStage = 'inicio', progressFrac = 0, fileMeta = null, autoReported = 0, autoCount = 0;
+(function hookConsole(){
+  for (const k of ['log','info','warn','error']) {
+    const orig = console[k].bind(console);
+    console[k] = (...a) => {
+      try { LOG.push(new Date().toISOString().slice(11,23) + ' [' + k + '] ' + a.map(v => typeof v === 'string' ? v : (v && v.stack) ? v.stack : safeJSON(v)).join(' ')); if (LOG.length > 300) LOG.shift(); } catch(e){}
+      orig(...a);
+    };
+  }
+})();
+function safeJSON(v){ try { return JSON.stringify(v); } catch(e){ return String(v); } }
+function step(s){ STEPS.push(new Date().toISOString().slice(11,23) + '  ' + s); if (STEPS.length > 200) STEPS.shift(); console.info('[paso] ' + s); }
+function buildReport(){
+  const n = navigator, scr = window.screen || {};
+  const mem = performance && performance.memory ? `${(performance.memory.usedJSHeapSize/1048576).toFixed(1)} / ${(performance.memory.jsHeapSizeLimit/1048576).toFixed(0)} MB` : 'no disponible';
+  const L = [];
+  L.push('INFORME DE ERROR — GlitchHead (web)');
+  L.push('Versión: v' + APP_VERSION + ' · motor ' + GlitchHeadDSP.VERSION);
+  L.push('Fecha: ' + new Date().toString());
+  L.push('');
+  L.push('== Error ==');
+  if (lastError) {
+    L.push('Dónde: ' + lastError.where);
+    L.push('Etapa: ' + lastError.stage + '  (progreso ' + Math.round(lastError.progress*100) + '%)');
+    L.push('Mensaje: ' + lastError.message);
+    L.push('Stack:\n' + (lastError.stack || '(sin stack)'));
+  } else L.push('(no se ha registrado ningún error; informe manual)');
+  L.push('');
+  L.push('== Entorno ==');
+  L.push('Navegador/UA: ' + n.userAgent);
+  L.push('Plataforma: ' + (n.userAgentData && n.userAgentData.platform || n.platform || '?'));
+  L.push('Núcleos: ' + (n.hardwareConcurrency || '?') + ' · RAM aprox: ' + (n.deviceMemory ? n.deviceMemory + ' GB' : 'no disponible'));
+  L.push('Pantalla: ' + scr.width + 'x' + scr.height + ' @' + (window.devicePixelRatio||1) + 'x · ventana ' + innerWidth + 'x' + innerHeight);
+  L.push('URL: ' + location.href.split('?')[0] + ' · protocolo ' + location.protocol);
+  L.push('Contexto seguro: ' + window.isSecureContext + ' · COOP/COEP (crossOriginIsolated): ' + window.crossOriginIsolated);
+  L.push('WebGPU: ' + ('gpu' in n) + ' · AudioContext: ' + !!(window.AudioContext||window.webkitAudioContext) + ' · AudioWorklet: ' + !!(window.AudioWorkletNode) + ' · MediaRecorder: ' + ('MediaRecorder' in window));
+  L.push('Memoria JS: ' + mem);
+  L.push('Frecuencia de muestreo del contexto: ' + (actx ? actx.sampleRate : 'sin crear') + ' · estado ' + (actx ? actx.state : '-'));
+  L.push('');
+  L.push('== Opciones elegidas ==');
+  L.push('Preset: ' + (ui ? ui.presetName : '?') + ' · A/B: ' + ab + ' · bucle: ' + $('loopChk').checked + ' · cola: ' + $('tailChk').checked + ' · en directo: ' + !!liveStream);
+  L.push(ui ? JSON.stringify(ui.params) : '(sin panel)');
+  L.push('');
+  L.push('== Archivo (sin contenido) ==');
+  L.push(fileMeta ? `Nombre: ${fileMeta.name}\nTamaño: ${fileMeta.size} bytes\nTipo: ${fileMeta.type}\nDuración: ${fileMeta.duration ? fileMeta.duration.toFixed(2)+' s' : '?'} · canales ${fileMeta.channels||'?'} · ${fileMeta.sampleRate||'?'} Hz` : '(ninguno)');
+  L.push('');
+  L.push('== Resultado parcial ==');
+  L.push(lastPartial ? safeJSON(lastPartial) : '(ninguno)');
+  L.push('');
+  L.push('== Cronología de pasos ==');
+  L.push(STEPS.join('\n') || '(vacía)');
+  L.push('');
+  L.push('== Consola (últimas ' + LOG.length + ' líneas) ==');
+  L.push(LOG.join('\n'));
+  return L.join('\n');
+}
+function downloadBlob(name, blob){
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+}
+function downloadReport(){ downloadBlob('glitchhead-v' + APP_VERSION + '-informe-' + new Date().toISOString().replace(/[:.]/g,'-').slice(0,19) + '.txt', new Blob([buildReport()], {type:'text/plain;charset=utf-8'})); }
+function reportError(where, err, extraStack){
+  lastError = { where, stage: currentStage, progress: progressFrac, message: String(err && err.message || err), stack: (err && err.stack || '') + (extraStack ? '\n' + extraStack : '') };
+  console.error('[ERROR] ' + where + ': ' + lastError.message);
+  setStatus('⚠ Error: ' + lastError.message + ' — se ha descargado un informe (.txt).', true);
+  const now = Date.now();
+  if (now - autoReported > 8000 && autoCount < 5) { autoReported = now; autoCount++; try { downloadReport(); } catch(e){} }
+}
+window.onerror = (msg, src, line, col, err) => { reportError('window.onerror ' + (src||'') + ':' + line + ':' + col, err || msg); };
+window.addEventListener('unhandledrejection', e => reportError('unhandledrejection', e.reason || 'promesa rechazada'));
+$('reportBtn').onclick = downloadReport;
+function setStatus(t, warn){ const s = $('status'); s.textContent = t; s.classList.toggle('warn', !!warn); }
+
+/* ================== Audio ================== */
+let actx = null, node = null, master = null, srcNode = null, srcBuf = null, playing = false, startAt = 0, ab = 'proc', liveStream = null, liveSrc = null;
+let recNode = null, recChunks = null, outRec = null;
+async function ensureAudio(){
+  if (actx) { if (actx.state === 'suspended') await actx.resume(); return actx; }
+  currentStage = 'iniciar audio';
+  actx = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: 'interactive' });
+  master = actx.createGain(); master.connect(actx.destination);
+  node = await GlitchHeadUI.createNode(actx, leds => ui.leds(leds));
+  node.connect(master);
+  node.setParams(ui.params); node.setBypass(ab === 'orig');
+  // grabador de la salida (WAV)
+  const recCode = `registerProcessor('gh-rec', class extends AudioWorkletProcessor{constructor(){super();this.on=false;this.port.onmessage=e=>{this.on=!!e.data.on;}}
+    process(i,o){const x=i[0];if(this.on&&x&&x[0]){this.port.postMessage([x[0].slice(0),(x[1]||x[0]).slice(0)]);}return true;}});`;
+  await GlitchHeadUI.addModule(actx, recCode);
+  recNode = new AudioWorkletNode(actx, 'gh-rec', { numberOfInputs: 1, numberOfOutputs: 0, channelCount: 2, channelCountMode: 'explicit' });
+  master.connect(recNode);
+  recNode.port.onmessage = e => { if (outRec) { outRec.L.push(e.data[0]); outRec.R.push(e.data[1]); } };
+  step('audio listo ' + actx.sampleRate + ' Hz');
+  return actx;
+}
+
+/* ================== Panel ================== */
+const ui = GlitchHeadUI.mount($('ghPanel'), { onChange(p, id){ if (node) node.setParams(p); if (id === 'preset' || id === 'rand') step('preset: ' + ui.presetName); } });
+
+/* ================== Cargar audio ================== */
+async function loadArrayBuffer(ab_, meta){
+  await ensureAudio(); stopPlay();
+  currentStage = 'decodificar'; step('decodificar ' + meta.name);
+  fileMeta = Object.assign({}, meta);
+  const buf = await actx.decodeAudioData(ab_.slice(0));
+  if (buf.duration > 600) throw new Error('El archivo dura más de 10 minutos.');
+  fileMeta.duration = buf.duration; fileMeta.channels = buf.numberOfChannels; fileMeta.sampleRate = buf.sampleRate;
+  srcBuf = buf; drawWave();
+  $('playBtn').disabled = false; $('dlBtn').disabled = false;
+  $('srcInfo').textContent = `${meta.name} · ${buf.duration.toFixed(2)} s · ${buf.numberOfChannels === 1 ? 'mono' : 'estéreo'} · ${buf.sampleRate} Hz`;
+  setStatus('Listo. Pulsa ▶ y mueve los mandos: suena en tiempo real.');
+  currentStage = 'listo';
+}
+$('file').onchange = async e => {
+  const f = e.target.files[0]; e.target.value = ''; if (!f) return;
+  try { await loadArrayBuffer(await f.arrayBuffer(), { name: f.name, size: f.size, type: f.type || '?' }); }
+  catch (err) { reportError('cargar archivo', err); }
+};
+$('demoBtn').onclick = async () => {
+  try {
+    await ensureAudio(); stopPlay();
+    const sr = actx.sampleRate, bpm = 92, beat = 60 / bpm, n = Math.round(beat * 8 * sr), b = actx.createBuffer(2, n, sr);
+    const L = b.getChannelData(0), R = b.getChannelData(1); let s = 7; const rnd = () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296;
+    const kick = [0, 2.5, 4, 6.5], snare = [1, 3, 5, 7], bassN = [55, 55, 65.4, 49];
+    for (let i = 0; i < n; i++) {
+      const t = i / sr, bt = t / beat; let x = 0;
+      for (const k of kick) { const d = (bt - k) * beat; if (d >= 0 && d < 0.4) x += Math.sin(2 * Math.PI * (48 + 90 * Math.exp(-d * 30)) * d) * Math.exp(-d * 9) * 0.8; }
+      for (const k of snare) { const d = (bt - k) * beat; if (d >= 0 && d < 0.25) x += ((rnd() * 2 - 1) * 0.45 + Math.sin(2 * Math.PI * 190 * d) * 0.25) * Math.exp(-d * 22); }
+      const h = (bt * 2) % 1 * beat / 2; x += (rnd() * 2 - 1) * Math.exp(-h * 70) * 0.12;
+      const f = bassN[Math.floor(bt / 2) % 4], bd = (bt % 2) * beat; x += Math.sin(2 * Math.PI * f * t) * 0.28 * Math.min(1, bd * 40) * Math.exp(-bd * 1.2);
+      const ch = 0.05 * (Math.sin(2 * Math.PI * 220 * t) + Math.sin(2 * Math.PI * 261.6 * t) + Math.sin(2 * Math.PI * 329.6 * t)) * (0.6 + 0.4 * Math.sin(2 * Math.PI * 0.5 * t));
+      L[i] = x + ch * 0.7; R[i] = x * 0.95 + ch;
+    }
+    srcBuf = b; fileMeta = { name: 'Loop de prueba (92 BPM)', size: 0, type: 'generado', duration: b.duration, channels: 2, sampleRate: sr };
+    drawWave(); $('playBtn').disabled = false; $('dlBtn').disabled = false;
+    $('srcInfo').textContent = 'Loop de prueba · batería, bajo y acorde · 92 BPM · 2 compases';
+    setStatus('Listo. Pulsa ▶ y prueba los presets.'); step('loop de prueba');
+  } catch (err) { reportError('loop de prueba', err); }
+};
+
+/* ================== Grabar (micro → archivo) ================== */
+let recState = null;
+$('recBtn').onclick = async () => {
+  try {
+    if (recState) { recState.stop(); return; }
+    await ensureAudio(); stopPlay(); stopLive();
+    currentStage = 'grabar';
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
+    const mr = new MediaRecorder(stream), chunks = [], t0 = Date.now();
+    const an = actx.createAnalyser(); const ms = actx.createMediaStreamSource(stream); ms.connect(an); const buf = new Float32Array(an.fftSize);
+    const tick = setInterval(() => { an.getFloatTimeDomainData(buf); let p = 0; for (const v of buf) p = Math.max(p, Math.abs(v)); $('meter').firstChild.style.width = Math.min(100, p * 100) + '%'; $('recTime').textContent = ((Date.now() - t0) / 1000).toFixed(1) + ' s'; if (Date.now() - t0 > 300000) recState.stop(); }, 80);
+    mr.ondataavailable = e => chunks.push(e.data);
+    mr.onstop = async () => {
+      clearInterval(tick); stream.getTracks().forEach(t => t.stop()); ms.disconnect(); recState = null;
+      $('recBtn').classList.remove('on'); $('recBtn').textContent = '● Grabar'; $('meter').firstChild.style.width = '0';
+      const blob = new Blob(chunks, { type: mr.mimeType });
+      try { await loadArrayBuffer(await blob.arrayBuffer(), { name: 'Grabación ' + new Date().toLocaleTimeString(), size: blob.size, type: mr.mimeType }); }
+      catch (err) { reportError('grabación', err); }
+    };
+    mr.start(); recState = mr; $('recBtn').classList.add('on'); $('recBtn').textContent = '■ Parar'; step('grabando');
+  } catch (err) { reportError('grabar', err); }
+};
+
+/* ================== En directo ================== */
+function stopLive(){
+  if (!liveStream) return;
+  try { liveSrc.disconnect(); } catch(e){}
+  liveStream.getTracks().forEach(t => t.stop()); liveStream = null; liveSrc = null;
+  $('liveBtn').classList.remove('on'); $('liveBtn').textContent = '🎙 En directo';
+}
+$('liveBtn').onclick = async () => {
+  try {
+    if (liveStream) { stopLive(); setStatus('Directo parado.'); return; }
+    await ensureAudio(); stopPlay();
+    currentStage = 'directo';
+    liveStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false, latency: 0 } });
+    liveSrc = actx.createMediaStreamSource(liveStream); liveSrc.connect(node);
+    $('liveBtn').classList.add('on'); $('liveBtn').textContent = '■ Parar directo';
+    setStatus('En directo: usa auriculares para evitar acoples. Latencia aprox. ' + Math.round(((actx.baseLatency || 0) + (actx.outputLatency || 0)) * 1000) + ' ms.');
+    step('directo activado');
+  } catch (err) { stopLive(); reportError('en directo', err); }
+};
+
+/* ================== Reproducción ================== */
+function stopPlay(){
+  if (srcNode) { try { srcNode.onended = null; srcNode.stop(); } catch(e){} srcNode.disconnect(); srcNode = null; }
+  playing = false; $('playBtn').textContent = '▶ Reproducir';
+}
+async function play(from){
+  await ensureAudio(); stopPlay(); stopLive();
+  if (!srcBuf) return;
+  srcNode = actx.createBufferSource(); srcNode.buffer = srcBuf; srcNode.loop = $('loopChk').checked;
+  srcNode.connect(node);
+  const off = Math.max(0, Math.min(srcBuf.duration - 0.01, from || 0));
+  srcNode.start(0, off); startAt = actx.currentTime - off; playing = true;
+  srcNode.onended = () => { if (playing && !srcNode.loop) stopPlay(); };
+  $('playBtn').textContent = '■ Parar'; step('reproducir desde ' + off.toFixed(2));
+}
+$('playBtn').onclick = () => { try { playing ? stopPlay() : play(0); } catch (err) { reportError('reproducir', err); } };
+$('loopChk').onchange = () => { if (srcNode) srcNode.loop = $('loopChk').checked; };
+$('abSeg').onclick = e => { const b = e.target.closest('button'); if (!b) return; ab = b.dataset.v; [...$('abSeg').children].forEach(x => x.classList.toggle('on', x === b)); if (node) node.setBypass(ab === 'orig'); };
+$('resetBtn').onclick = () => { if (node) node.resetEngine(); setStatus('Memoria vaciada.'); };
+$('wave').addEventListener('pointerdown', e => { if (!srcBuf) return; const r = $('wave').getBoundingClientRect(); play((e.clientX - r.left) / r.width * srcBuf.duration).catch(err => reportError('saltar', err)); });
+
+function drawWave(){
+  const c = $('wave'), dpr = window.devicePixelRatio || 1, W = c.clientWidth * dpr, H = c.clientHeight * dpr;
+  c.width = W; c.height = H; const g = c.getContext('2d');
+  g.fillStyle = '#111'; g.fillRect(0, 0, W, H);
+  if (!srcBuf) { g.fillStyle = '#6f675e'; g.font = (13 * dpr) + 'px system-ui'; g.fillText('Sin audio', 12 * dpr, H / 2); return; }
+  const d = srcBuf.getChannelData(0), step_ = Math.max(1, Math.floor(d.length / W));
+  g.fillStyle = '#d9600b';
+  for (let x = 0; x < W; x++) { let mn = 1, mx = -1; for (let i = x * step_, e = Math.min(d.length, i + step_); i < e; i++) { const v = d[i]; if (v < mn) mn = v; if (v > mx) mx = v; } g.fillRect(x, (1 - mx) * H / 2, 1, Math.max(1, (mx - mn) * H / 2)); }
+}
+window.addEventListener('resize', drawWave);
+(function anim(){
+  if (playing && srcBuf) { const t = (actx.currentTime - startAt); const p = srcNode && srcNode.loop ? (t % srcBuf.duration) / srcBuf.duration : Math.min(1, t / srcBuf.duration); $('prog').style.width = (p * 100).toFixed(1) + '%'; }
+  requestAnimationFrame(anim);
+})();
+
+/* ================== Exportar ================== */
+function encodeWav24(chans, sr){
+  const n = chans[0].length, nc = chans.length, bps = 3, data = n * nc * bps, buf = new ArrayBuffer(44 + data), v = new DataView(buf);
+  const w = (o, s) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
+  w(0,'RIFF'); v.setUint32(4, 36 + data, true); w(8,'WAVE'); w(12,'fmt '); v.setUint32(16,16,true); v.setUint16(20,1,true); v.setUint16(22,nc,true);
+  v.setUint32(24,sr,true); v.setUint32(28,sr*nc*bps,true); v.setUint16(32,nc*bps,true); v.setUint16(34,24,true); w(36,'data'); v.setUint32(40,data,true);
+  let o = 44;
+  for (let i = 0; i < n; i++) for (let c = 0; c < nc; c++) { let s = Math.max(-1, Math.min(1, chans[c][i])); let x = Math.round(s * 8388607); if (x < 0) x += 16777216; v.setUint8(o, x & 255); v.setUint8(o + 1, (x >> 8) & 255); v.setUint8(o + 2, (x >> 16) & 255); o += 3; }
+  return new Blob([buf], { type: 'audio/wav' });
+}
+function safeGain(chans){
+  if (!$('safeChk').checked) return 1;
+  let pk = 0; for (const ch of chans) for (let i = 0; i < ch.length; i++) { const a = Math.abs(ch[i]); if (a > pk) pk = a; }
+  if (pk > 0.989) { const g = 0.989 / pk; for (const ch of chans) for (let i = 0; i < ch.length; i++) ch[i] *= g; return g; }
+  return 1;
+}
+async function renderFile(){
+  const chans = [srcBuf.getChannelData(0), srcBuf.numberOfChannels > 1 ? srcBuf.getChannelData(1) : srcBuf.getChannelData(0)];
+  currentStage = 'procesar archivo'; progressFrac = 0;
+  const out = await GlitchHeadUI.renderOffline(chans, srcBuf.sampleRate, ui.params, $('tailChk').checked ? 2 : 0, p => { progressFrac = p; $('prog').style.width = (p * 100).toFixed(0) + '%'; });
+  progressFrac = 1; return out;
+}
+function baseName(){ return ((fileMeta && fileMeta.name) || 'audio').replace(/\.[^.]+$/, '').replace(/[^\w\-áéíóúñÁÉÍÓÚÑ ]+/g, '').trim() || 'audio'; }
+$('dlBtn').onclick = async () => {
+  if (!srcBuf) return;
+  try {
+    $('dlBtn').disabled = true; setStatus('Procesando el archivo entero…');
+    const out = await renderFile(); const g = safeGain(out);
+    lastPartial = { exportado: out[0].length, ganancia: g };
+    downloadBlob('GlitchHead - ' + baseName() + ' - ' + ui.presetName + '.wav', encodeWav24(out, srcBuf.sampleRate));
+    setStatus('WAV descargado' + (g < 1 ? ` (bajado ${(20 * Math.log10(g)).toFixed(1)} dB para no saturar).` : '.'));
+    step('exportado WAV');
+  } catch (err) { reportError('exportar WAV', err); }
+  finally { $('dlBtn').disabled = false; }
+};
+$('outRecBtn').onclick = async () => {
+  try {
+    await ensureAudio();
+    if (outRec) {
+      recNode.port.postMessage({ on: false });
+      const r = outRec; outRec = null; $('outRecBtn').classList.remove('on'); $('outRecBtn').textContent = '⏺ Grabar salida';
+      const n = r.L.reduce((a, b) => a + b.length, 0); if (!n) { setStatus('No se grabó nada.'); return; }
+      const L = new Float32Array(n), R = new Float32Array(n); let o = 0;
+      for (let i = 0; i < r.L.length; i++) { L.set(r.L[i], o); R.set(r.R[i], o); o += r.L[i].length; }
+      const g = safeGain([L, R]);
+      downloadBlob('GlitchHead - salida - ' + new Date().toISOString().slice(0,19).replace(/[:T]/g, '-') + '.wav', encodeWav24([L, R], actx.sampleRate));
+      setStatus('Salida grabada: ' + (n / actx.sampleRate).toFixed(1) + ' s' + (g < 1 ? ' (bajada para no saturar)' : '') + '.'); step('salida grabada');
+      return;
+    }
+    outRec = { L: [], R: [] }; recNode.port.postMessage({ on: true });
+    $('outRecBtn').classList.add('on'); $('outRecBtn').textContent = '■ Parar grabación'; setStatus('Grabando la salida… (incluye lo que muevas en directo)');
+  } catch (err) { reportError('grabar salida', err); }
+};
+
+step('App iniciada ' + APP_VERSION);
+drawWave();
+if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(e => console.warn('sw', e));
+</script>
+<script src="sh-core.js"></script>
+<script>
+/* Conexión con las demás apps de Sampled Head (sh-core): recibe loops, stems, pads y frases; envía el audio procesado */
+(function(){
+  if (!window.SH || !SH.ui || !SH.ui.dock) return;
+  SH.ui.dock({ me: 'glitchhead', pos: 'right', kinds: ['loop', 'stem', 'pad', 'phrase'], sendHint: 'Manda el audio procesado con GlitchHead a otra app',
+    provide: async () => {
+      if (!srcBuf) return null;
+      const out = await renderFile(); safeGain(out);
+      return [{ name: 'GlitchHead · ' + baseName() + ' · ' + ui.presetName, kind: 'loop', audio: { channels: out, sampleRate: srcBuf.sampleRate } }];
+    },
+    accept: async list => {
+      const it = list.find(x => x.wav); if (!it) return false;
+      step('Recibido de ' + (it.from || '?') + ': ' + it.name);
+      try { await loadArrayBuffer(it.wav, { name: (it.name || 'audio') + '.wav', size: it.wav.byteLength, type: 'audio/wav (de ' + (it.from || '?') + ')' }); }
+      catch (err) { reportError('recibir de otra app', err); return false; }
+      return true;
+    } });
+})();
+</script>
+</body>
+</html>

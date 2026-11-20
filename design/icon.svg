@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#17130f"/>
+  <circle cx="256" cy="246" r="226" fill="#a94a07"/>
+  <circle cx="256" cy="236" r="226" fill="#d9600b"/>
+  <!-- placa de sampler cortada en rodajas desplazadas -->
+  <g fill="#f3efe9">
+    <rect x="150" y="70" width="200" height="56" rx="4"/>
+    <rect x="182" y="132" width="200" height="56" rx="4"/>
+    <rect x="128" y="194" width="200" height="56" rx="4"/>
+    <rect x="152" y="318" width="200" height="66" rx="4"/>
+  </g>
+  <rect x="190" y="256" width="200" height="56" rx="4" fill="#111"/>
+  <g fill="#d9600b">
+    <circle cx="180" cy="98" r="11"/><circle cx="222" cy="98" r="11"/><circle cx="264" cy="98" r="11"/><circle cx="306" cy="98" r="11"/>
+    <circle cx="282" cy="160" r="20"/>
+    <rect x="148" y="208" width="36" height="28"/><rect x="196" y="208" width="36" height="28"/><rect x="244" y="208" width="36" height="28"/><rect x="292" y="208" width="24" height="28"/>
+    <rect x="172" y="337" width="36" height="28"/><rect x="220" y="337" width="36" height="28"/><rect x="268" y="337" width="36" height="28"/><rect x="316" y="337" width="24" height="28"/>
+  </g>
+  <g fill="#ef7a22"><rect x="210" y="270" width="36" height="28"/><rect x="258" y="270" width="36" height="28"/><rect x="306" y="270" width="36" height="28"/></g>
+  <!-- pegatina -->
+  <g transform="rotate(-4 256 440)">
+    <rect x="96" y="408" width="320" height="64" rx="6" fill="#111"/>
+    <text x="256" y="454" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-style="italic" font-size="44" fill="#f3efe9" letter-spacing="1">GLITCHHEAD</text>
+  </g>
+</svg>
