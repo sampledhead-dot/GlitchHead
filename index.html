@@ -681,7 +681,9 @@ const CSS = `
 .ghui .gh-k .l{font-size:9.5px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
 .ghui .gh-k .v{font-family:var(--mono);font-size:10.5px;color:var(--muted);white-space:nowrap}
 .ghui .gh-t{display:flex;flex-direction:column;align-items:center;gap:3px;width:70px;font-size:9.5px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
-.ghui .gh-info{position:sticky;bottom:6px;padding-right:96px!important;background:var(--ink);color:var(--orl);border-radius:6px;padding:7px 10px;font-size:13px;margin-top:10px;min-height:34px;z-index:2}
+.ghui .gh-hint{font-size:12px;opacity:.7;margin:0 2px 6px;color:var(--gh-flow,#f3efe9)}
+.ghui .gh-info{display:none;position:sticky;bottom:58px;background:var(--ink);color:var(--orl);border-radius:6px;padding:7px 10px;font-size:13px;margin-top:10px;min-height:34px;z-index:2;box-shadow:0 4px 14px rgba(0,0,0,.4)}
+.ghui .gh-info.show{display:block}
 .ghui .gh-glob{display:flex;gap:2px}
 .ghui .gh-glob .gh-k .l{color:inherit}
 @media (max-width:520px){.ghui .gh-k{width:58px}.ghui .gh-k svg{width:46px;height:46px}.ghui .gh-grid{grid-template-columns:1fr}}
@@ -735,14 +737,17 @@ function mount(root, opts) {
     <div class="gh-glob"></div>
   </div>
   <div class="gh-flow"></div>
+  <div class="gh-hint">Toca o pasa el ratón por un mando para ver qué hace · doble toque = valor por defecto · arrastra arriba/abajo para girar.</div>
   <div class="gh-grid"></div>
-  <div class="gh-info">Pasa el dedo o el ratón por un mando para ver qué hace. Doble toque = valor por defecto.</div>`;
+  <div class="gh-info" role="status"></div>`;
   const $ = s => root.querySelector(s);
   const sel = $('.gh-sel'), grid = $('.gh-grid'), info = $('.gh-info'), flow = $('.gh-flow');
 
+  let infoT = 0;
+  function say(t) { info.textContent = t; info.classList.add('show'); clearTimeout(infoT); infoT = setTimeout(() => info.classList.remove('show'), 6000); }
   function showInfo(id) {
-    if (id === 'lock') { info.textContent = 'Candado: al cambiar de preset se conservan Input, Mix y Output.'; return; }
-    const d = BYID[id]; if (d) info.textContent = d.name + ': ' + d.desc;
+    if (id === 'lock') { say('Candado: al cambiar de preset se conservan Input, Mix y Output.'); return; }
+    const d = BYID[id]; if (d) say(d.name + ': ' + d.desc);
   }
   function emit(id) { if (opts.onChange) opts.onChange(Object.assign({}, P), id); }
   function setP(id, v, silent) {
@@ -884,7 +889,7 @@ function mount(root, opts) {
     u[n] = vals; saveUser(u); ui.presetName = n; fill('u:' + n);
   };
   btn('del').onclick = () => {
-    if (!sel.value.startsWith('u:')) { info.textContent = 'Solo se pueden borrar los presets de usuario.'; return; }
+    if (!sel.value.startsWith('u:')) { say('Solo se pueden borrar los presets de usuario.'); return; }
     const n = sel.value.slice(2); if (!confirm('¿Borrar el preset «' + n + '»?')) return;
     const u = userPresets(); delete u[n]; saveUser(u); fill('f:0'); choose('f:0');
   };
@@ -899,7 +904,7 @@ function mount(root, opts) {
     }
     P.sFreeze = 0; P.hFreeze = r() < 0.15 ? 1 : 0; P.sMonitor = 0.4 + r() * 0.3; P.xVolA = 0.4 + r() * 0.5; P.xVolB = 0.2 + r() * 0.6; P.hWet = 0.3 + r() * 0.5;
     Object.values(knobs).forEach(k => k.upd()); Object.values(pads).forEach(k => k.upd()); layout(); ui.presetName = 'Azar'; emit('rand');
-    info.textContent = 'Ajustes al azar en los motores encendidos. Guarda con 💾 si te gusta.';
+    say('Ajustes al azar en los motores encendidos. Guarda con 💾 si te gusta.');
   };
   btn('exp').onclick = () => {
     const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify({ app: 'GlitchHead', presets: userPresets() }, null, 1)], { type: 'application/json' }));
@@ -907,8 +912,8 @@ function mount(root, opts) {
   };
   root.querySelector('.gh-pre input[type=file]').onchange = async e => {
     const f = e.target.files[0]; e.target.value = ''; if (!f) return;
-    try { const j = JSON.parse(await f.text()); const u = userPresets(); Object.assign(u, j.presets || j); saveUser(u); fill(sel.value); info.textContent = 'Presets importados.'; }
-    catch (er) { info.textContent = 'No se pudo leer el archivo de presets.'; }
+    try { const j = JSON.parse(await f.text()); const u = userPresets(); Object.assign(u, j.presets || j); saveUser(u); fill(sel.value); say('Presets importados.'); }
+    catch (er) { say('No se pudo leer el archivo de presets.'); }
   };
 
   ui.set = obj => { Object.assign(P, obj); Object.values(knobs).forEach(k => k.upd()); Object.values(pads).forEach(k => k.upd()); layout(); };
@@ -917,7 +922,7 @@ function mount(root, opts) {
     mods[0].leds.forEach((l, i) => { l.style.opacity = (0.2 + 0.8 * Math.min(1, v[i] || 0)).toFixed(2); });
     mods[2].leds.forEach((l, i) => { l.style.opacity = (0.2 + 0.8 * Math.min(1, v[2 + i] || 0)).toFixed(2); });
   };
-  ui.showInfo = t => { info.textContent = t; };
+  ui.showInfo = say;
   return ui;
 }
 
