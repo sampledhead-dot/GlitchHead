@@ -62,6 +62,7 @@ Input ─┬──────────────────────�
 - Nombre **GlitchHead** y estética Sampled Head; no usar marcas, nombres ni diseño del producto de referencia.
 
 ## Historial
+- **1.0.1** (24-11-2026): botón ☰ arriba a la derecha con el **menú común «☰ Menú»** de todas las apps (sh-core 1.5.0, `SH.ui.menu`): mismas secciones desplegables y en el mismo orden — Proyecto · Importar · Exportar · Otras apps · Copia de tus datos · Ajustes · Ayuda (guía e informe .txt) —; recuerda la sección abierta; los botones de siempre siguen haciendo lo mismo (el menú los pulsa); «⇄ Apps» va dentro (Otras apps, con el número de recibidos en el botón ☰). Presets en Proyecto.
 - **1.0.0** (20-11-2026): primera versión. Motor de tres efectos, plugin VST3/AU/Standalone, app web, 20 presets,
   pestañas en CrazyHead y SampledHead App, conexión con las demás apps.
 
